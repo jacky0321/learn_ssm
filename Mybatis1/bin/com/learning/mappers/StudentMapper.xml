@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learning.mappers.StudentMapper">
+
+	<insert id="add" parameterType="Student">
+		insert into
+		t_student(name, age)
+		values(#{name},#{age})
+	</insert>
+
+	<update id="update" parameterType="Student">
+		update t_student set name =
+		#{name}, age = #{age} where id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		delete from t_student where id
+		= #{id}
+	</delete>
+
+	<select id="findById" parameterType="int" resultType="Student">
+		select
+		* from t_student where id = #{id}
+	</select>
+
+	<!--
+	<resultMap id="StudentResult" type="Student">
+		<id property="id" column="id" />
+		<result property="name" column="name"></result>
+		<result property="age" column="age"></result>
+	</resultMap>
+
+	<select id="findAll" resultMap="StudentResult">
+		select * from t_student
+	</select> 
+	 -->
+
+	<select id="findAll" resultType="Student">
+		select * from t_student
+	</select>
+	
+	<resultMap id="StudentAddressResult" type="Student">
+		<id property="id" column="id" />
+		<result property="name" column="name"></result>
+		<result property="age" column="age"></result>
+		<association property="address" column="address_id"
+			select="com.learning.mappers.AddressMapper.findById"></association>
+	</resultMap>
+
+	<select id="findByIdWithAddress" resultMap="StudentAddressResult">
+		select * from t_student where id = #{id};
+	</select>
+
+	<resultMap type="Student" id="studentGradeResult">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="age" column="age" />
+		<association property="address" column="address_id"
+			select="com.learning.mappers.AddressMapper.findById"></association>
+		<association property="grade" column="grade_id"
+			select="com.learning.mappers.GradeMapper.findById"></association>
+	</resultMap>
+
+	<select id="findByIdWithGrade" resultMap="studentGradeResult">
+		select * from t_student where id = #{id};
+	</select>
+
+	<select id="findByGradeId" parameterType="Integer" resultType="Student">
+		select
+		* from t_student where grade_id = #{id}
+	</select>
+
+</mapper> 
